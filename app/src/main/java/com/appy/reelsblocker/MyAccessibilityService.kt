@@ -16,7 +16,7 @@ class MyAccessibilityService : AccessibilityService() {
 
         Log.i("onAccessibilityEvent", "action: ${event}")
         Log.i("onAccessibilityEvent", "contentChangeTypes: ${event?.contentChangeTypes}")
-//youtube
+        //youtube
         if (event?.text?.firstOrNull()?.trim().toString() in "Shorts") {
             Log.i("onAccessibilityEvent", "onAccessibilityEvent Shorts")
             performGlobalAction(GLOBAL_ACTION_BACK)
@@ -26,7 +26,7 @@ class MyAccessibilityService : AccessibilityService() {
             Log.i("onAccessibilityEvent", "onAccessibilityEvent Shorts")
             performGlobalAction(GLOBAL_ACTION_BACK)
         }
-// facebook
+        // facebook
             if (event?.eventType == TYPE_VIEW_CLICKED && event.contentDescription.toString().trim() == "View reels") {
             Log.i("onAccessibilityEvent", "onAccessibilityEvent Shorts")
             performGlobalAction(GLOBAL_ACTION_BACK)
