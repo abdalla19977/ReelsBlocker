@@ -1,5 +1,6 @@
 package com.appy.reelsblocker.model
 
+import com.appy.reelsblocker.model.consts.AddictiveApps
 import org.junit.Test
 
 class AddictiveFeaturesStringMatcherTest {
@@ -8,57 +9,103 @@ class AddictiveFeaturesStringMatcherTest {
 
 
     @Test
-    fun `View reels returns true`() {
+    fun `Youtube video return false`() {
+        val app = AddictiveApps.YOUTUBE
+        val contentDescription = "video"
 
-        val contentDescription = "View reels"
+        val isAddictiveFeature = stringMatcher.isAddictiveFeature(app, contentDescription)
 
-        val isAddictive = stringMatcher.isAddictiveFeature(contentDescription)
-
-        assert(isAddictive)
-
+        assert(!isAddictiveFeature)
     }
 
     @Test
-    fun `Reels returns true`() {
+    fun `Youtube short return true`() {
+        val app = AddictiveApps.YOUTUBE
+        val contentDescription = "short"
 
-        val contentDescription = "Reels"
+        val isAddictiveFeature = stringMatcher.isAddictiveFeature(app, contentDescription)
 
-        val isAddictive = stringMatcher.isAddictiveFeature(contentDescription)
-
-        assert(isAddictive)
-
+        assert(isAddictiveFeature)
     }
 
     @Test
-    fun `Shorts returns true`() {
+    fun `Youtube SHORT return true`() {
+        val app = AddictiveApps.YOUTUBE
+        val contentDescription = "SHORT"
 
-        val contentDescription = "Shorts"
+        val isAddictiveFeature = stringMatcher.isAddictiveFeature(app, contentDescription)
 
-        val isAddictive = stringMatcher.isAddictiveFeature(contentDescription)
-
-        assert(isAddictive)
-
+        assert(isAddictiveFeature)
     }
 
     @Test
-    fun `Photos returns false`() {
+    fun `Youtube Short return true`() {
+        val app = AddictiveApps.YOUTUBE
+        val contentDescription = "Short"
 
-        val contentDescription = "Photos"
+        val isAddictiveFeature = stringMatcher.isAddictiveFeature(app, contentDescription)
 
-        val isAddictive = stringMatcher.isAddictiveFeature(contentDescription)
+        assert(isAddictiveFeature)
+    }
 
-        assert(!isAddictive)
 
+    @Test
+    fun `Facebook video return false`() {
+        val app = AddictiveApps.FACEBOOK
+        val contentDescription = "video"
+
+        val isAddictiveFeature = stringMatcher.isAddictiveFeature(app, contentDescription)
+
+        assert(!isAddictiveFeature)
     }
 
     @Test
-    fun `null contentDescription returns false`() {
+    fun `Facebook reel return true`() {
+        val app = AddictiveApps.FACEBOOK
+        val contentDescription = "reel"
 
-        val contentDescription: String? = null
+        val isAddictiveFeature = stringMatcher.isAddictiveFeature(app, contentDescription)
 
-        val isAddictive = stringMatcher.isAddictiveFeature(contentDescription)
+        assert(isAddictiveFeature)
+    }
 
-        assert(!isAddictive)
+    @Test
+    fun `Facebook REEL return true`() {
+        val app = AddictiveApps.FACEBOOK
+        val contentDescription = "REEL"
 
+        val isAddictiveFeature = stringMatcher.isAddictiveFeature(app, contentDescription)
+
+        assert(isAddictiveFeature)
+    }
+
+    @Test
+    fun `Facebook Reel return true`() {
+        val app = AddictiveApps.FACEBOOK
+        val contentDescription = "Reel"
+
+        val isAddictiveFeature = stringMatcher.isAddictiveFeature(app, contentDescription)
+
+        assert(isAddictiveFeature)
+    }
+
+    @Test
+    fun `Facebook View reel return true`() {
+        val app = AddictiveApps.FACEBOOK
+        val contentDescription = "View reel"
+
+        val isAddictiveFeature = stringMatcher.isAddictiveFeature(app, contentDescription)
+
+        assert(isAddictiveFeature)
+    }
+
+    @Test
+    fun `Facebook reels_tray_container return false`() {
+        val app = AddictiveApps.FACEBOOK
+        val contentDescription = "reels_tray_container"
+
+        val isAddictiveFeature = stringMatcher.isAddictiveFeature(app, contentDescription)
+
+        assert(!isAddictiveFeature)
     }
 }

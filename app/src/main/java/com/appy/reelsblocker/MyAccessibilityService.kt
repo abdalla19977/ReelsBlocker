@@ -3,11 +3,13 @@ package com.appy.reelsblocker
 import android.accessibilityservice.AccessibilityService
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-import com.appy.reelsblocker.model.consts.AddictiveFeatures
-import java.util.Locale
+import com.appy.reelsblocker.model.AddictiveFeaturesStringMatcher
+import com.appy.reelsblocker.model.consts.AddictiveApps
 
 
 class MyAccessibilityService : AccessibilityService() {
+
+    private val addictiveFeaturesStringMatcher = AddictiveFeaturesStringMatcher()
 
     override fun onInterrupt() {
         Log.i("onInterrupt", "onInterrupt")
@@ -19,38 +21,32 @@ class MyAccessibilityService : AccessibilityService() {
         Log.i("onAccessibilityEvent", "action: ${event}")
         Log.i("onAccessibilityEvent", "contentChangeTypes: ${event?.contentChangeTypes}")
 
-        val contentDescription =
-            event?.contentDescription?.trim()?.toString()
-                ?.uppercase(Locale.ROOT)
-
-        val addictiveFeature = AddictiveFeatures.entries.firstOrNull {
-            it.name == contentDescription
-        }
-
-        if (addictiveFeature == null) {
+        if (event == null) {
             return
         }
 
-        Log.i("onAccessibilityEvent", "onAccessibilityEvent $addictiveFeature")
-        performGlobalAction(GLOBAL_ACTION_BACK)
+        val app = AddictiveApps.entries.firstOrNull { it.packageName == event.packageName }
 
-////youtube
-//        if (event?.text?.firstOrNull()?.trim().toString() in "Shorts") {
-//            Log.i("onAccessibilityEvent", "onAccessibilityEvent Shorts")
-//            performGlobalAction(GLOBAL_ACTION_BACK)
-//        }
-//        // instagram
-//        if (event?.eventType == TYPE_VIEW_CLICKED && event.contentDescription.toString().trim() == "Reels") {
-//            Log.i("onAccessibilityEvent", "onAccessibilityEvent Shorts")
-//            performGlobalAction(GLOBAL_ACTION_BACK)
-//        }
-//// facebook
-//            if (event?.eventType == TYPE_VIEW_CLICKED && event.contentDescription.toString().trim() == "View reels") {
-//            Log.i("onAccessibilityEvent", "onAccessibilityEvent Shorts")
-//            performGlobalAction(GLOBAL_ACTION_BACK)
-//        }
-//
-//
+        if (app == null) {
+            return
+        }
+
+
+        val contentDescription = event.contentDescription?.toString()
+
+        val isAddictiveFeature =
+            addictiveFeaturesStringMatcher.isAddictiveFeature(app, contentDescription)
+
+        if (!isAddictiveFeature) {
+            return
+        }
+
+        Log.i(
+            "onAccessibilityEvent",
+            "blocked $contentDescription for $app"
+        )
+
+        performGlobalAction(GLOBAL_ACTION_BACK)
 
 
     }
