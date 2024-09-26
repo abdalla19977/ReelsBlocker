@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ReelsBlocker</string>
+    <string name="accessibility_service_label">ايقاف السكرول</string>
+    <string name="accessibility_service_description">خدمة لايقاف استعمال اليوتيوب ريلز</string>
+</resources>
