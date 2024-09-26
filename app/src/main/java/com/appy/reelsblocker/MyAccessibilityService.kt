@@ -3,10 +3,13 @@ package com.appy.reelsblocker
 import android.accessibilityservice.AccessibilityService
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-import android.view.accessibility.AccessibilityEvent.TYPE_VIEW_CLICKED
+import com.appy.reelsblocker.model.AddictiveFeaturesStringMatcher
+import com.appy.reelsblocker.model.consts.AddictiveApps
 
 
 class MyAccessibilityService : AccessibilityService() {
+
+    private val addictiveFeaturesStringMatcher = AddictiveFeaturesStringMatcher()
 
     override fun onInterrupt() {
         Log.i("onInterrupt", "onInterrupt")
@@ -14,25 +17,36 @@ class MyAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
 
+
         Log.i("onAccessibilityEvent", "action: ${event}")
         Log.i("onAccessibilityEvent", "contentChangeTypes: ${event?.contentChangeTypes}")
-//youtube
-        if (event?.text?.firstOrNull()?.trim().toString() in "Shorts") {
-            Log.i("onAccessibilityEvent", "onAccessibilityEvent Shorts")
-            performGlobalAction(GLOBAL_ACTION_BACK)
+
+        if (event == null) {
+            return
         }
-        // instagram
-        if (event?.eventType == TYPE_VIEW_CLICKED && event.contentDescription.toString().trim() == "Reels") {
-            Log.i("onAccessibilityEvent", "onAccessibilityEvent Shorts")
-            performGlobalAction(GLOBAL_ACTION_BACK)
-        }
-// facebook
-            if (event?.eventType == TYPE_VIEW_CLICKED && event.contentDescription.toString().trim() == "View reels") {
-            Log.i("onAccessibilityEvent", "onAccessibilityEvent Shorts")
-            performGlobalAction(GLOBAL_ACTION_BACK)
+
+        val app = AddictiveApps.entries.firstOrNull { it.packageName == event.packageName }
+
+        if (app == null) {
+            return
         }
 
 
+        val contentDescription = event.contentDescription?.toString()
+
+        val isAddictiveFeature =
+            addictiveFeaturesStringMatcher.isAddictiveFeature(app, contentDescription)
+
+        if (!isAddictiveFeature) {
+            return
+        }
+
+        Log.i(
+            "onAccessibilityEvent",
+            "blocked $contentDescription for $app"
+        )
+
+        performGlobalAction(GLOBAL_ACTION_BACK)
 
 
     }
